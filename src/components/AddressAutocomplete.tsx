@@ -26,16 +26,21 @@ export default function AddressAutocomplete({
     );
 
     const loadAutocomplete = () => {
-      if (!window.google?.maps?.places || !inputRef.current) {
+      if (typeof window === "undefined" || !inputRef.current) {
         return;
       }
 
-      const bounds = new window.google.maps.LatLngBounds(
+      const google = (window as typeof window & { google?: any }).google;
+      if (!google?.maps?.places) {
+        return;
+      }
+
+      const bounds = new google.maps.LatLngBounds(
         { lat: 43.48, lng: -80.15 },
         { lat: 44.2, lng: -79.0 }
       );
 
-      const autocomplete = new window.google.maps.places.Autocomplete(
+      const autocomplete = new google.maps.places.Autocomplete(
         inputRef.current,
         {
           bounds,
